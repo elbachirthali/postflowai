@@ -33,13 +33,14 @@ function RegisterForm() {
   const params       = useSearchParams();
   const plan         = params.get("plan"); // "standard" | "pro" | null
 
-  const [name,     setName]     = useState("");
-  const [email,    setEmail]    = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw,   setShowPw]   = useState(false);
-  const [loading,  setLoading]  = useState(false);
-  const [error,    setError]    = useState("");
-  const [done,     setDone]     = useState(false); // waiting for Paddle checkout
+  const [name,        setName]        = useState("");
+  const [email,       setEmail]       = useState("");
+  const [password,    setPassword]    = useState("");
+  const [showPw,      setShowPw]      = useState(false);
+  const [loading,     setLoading]     = useState(false);
+  const [error,       setError]       = useState("");
+  const [done,        setDone]        = useState(false);
+  const [paidUser,    setPaidUser]    = useState(null); // store user for checkout
 
   const meta = plan ? PLAN_META[plan] : null;
 
@@ -55,14 +56,8 @@ function RegisterForm() {
       const user = await register(name, email, password);
 
       if (plan && PRICE_IDS[plan]) {
-        // Show "opening checkout" state, then open Paddle
+        setPaidUser(user);
         setDone(true);
-        openCheckout({
-          priceId:   PRICE_IDS[plan],
-          email:     user.email,
-          userId:    user.id,
-          onSuccess: () => router.push("/dashboard"),
-        });
       } else {
         router.push("/dashboard");
       }
@@ -81,20 +76,26 @@ function RegisterForm() {
           <Zap className="w-7 h-7 text-white" />
         </div>
         <h2 className="text-xl font-extrabold text-slate-900 mb-2">Account created!</h2>
-        <p className="text-slate-500 text-sm mb-4">
-          Complete your <span className="font-semibold capitalize">{plan}</span> subscription in the checkout window.
+        <p className="text-slate-500 text-sm mb-6">
+          Click below to complete your <span className="font-semibold capitalize">{plan}</span> subscription.
         </p>
-        <p className="text-xs text-slate-400">
-          Once payment is confirmed you&apos;ll be redirected to your dashboard automatically.
-        </p>
-        <div className="mt-6">
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="text-sm text-slate-400 hover:text-slate-600 underline transition"
-          >
-            Skip for now, go to dashboard →
-          </button>
-        </div>
+        <button
+          onClick={() => openCheckout({
+            priceId:   PRICE_IDS[plan],
+            email:     paidUser?.email,
+            userId:    paidUser?.id,
+            onSuccess: () => router.push("/dashboard"),
+          })}
+          className="w-full py-3.5 rounded-xl bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-500/20 mb-4"
+        >
+          Complete Payment →
+        </button>
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="text-sm text-slate-400 hover:text-slate-600 underline transition"
+        >
+          Skip for now, go to dashboard →
+        </button>
       </div>
     );
   }
