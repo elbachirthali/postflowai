@@ -6,36 +6,31 @@ export default function PaddleInit() {
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
     const env   = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT || "production";
-    if (!token) return;
+    if (!token) {
+      console.warn("[Paddle] No client token found");
+      return;
+    }
 
     let attempts = 0;
-
-    const tryInit = () => {
+    const interval = setInterval(() => {
       attempts++;
-      if (typeof window.Paddle === "undefined" || !window.Paddle.Initialize) {
-        if (attempts < 100) setTimeout(tryInit, 100);
-        return;
+      if (typeof window.Paddle !== "undefined") {
+        clearInterval(interval);
+        try {
+          window.Paddle.Environment.set(env);
+          window.Paddle.Initialize({ token });
+          window._paddleReady = true;
+          console.log("[Paddle] Initialized successfully");
+        } catch (e) {
+          console.error("[Paddle] Init error:", e);
+        }
+      } else if (attempts >= 100) {
+        clearInterval(interval);
+        console.warn("[Paddle] Timed out waiting for paddle.js");
       }
-      try {
-        window.Paddle.Environment.set(env);
-        window.Paddle.Initialize({ token });
-      } catch (e) {
-        // retry once more if internal state not ready
-        if (attempts < 100) setTimeout(tryInit, 200);
-      }
-    };
+    }, 100);
 
-    // Load paddle.js script then init
-    const script = document.createElement("script");
-    script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
-    script.async = true;
-    script.onload = () => tryInit();
-    document.head.appendChild(script);
-
-    return () => {
-      // cleanup: remove script if component unmounts before load
-      if (script.parentNode) script.parentNode.removeChild(script);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   return null;
