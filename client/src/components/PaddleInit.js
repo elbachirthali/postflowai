@@ -8,33 +8,32 @@ export default function PaddleInit() {
     const env   = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT || "production";
     if (!token) { console.warn("[Paddle] No token"); return; }
 
-    const script = document.createElement("script");
-    script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
-    script.async = true;
-    script.onload = () => {
-      let attempts = 0;
+    const loadAndInit = (attempt = 1) => {
+      // Remove old Paddle script and state to get a fresh instance
+      document.querySelectorAll('script[src*="paddle.com/paddle"]').forEach(s => s.remove());
+      delete window.Paddle;
 
-      const tryInit = () => {
-        attempts++;
-        try {
-          window.Paddle.Environment.set(env);
-          window.Paddle.Initialize({ token });
-          // Only reaches here if no error thrown
-          window._paddle = window.Paddle;
-          window._paddleReady = true;
-          console.log("[Paddle] Ready after", attempts, "attempt(s)");
-        } catch (e) {
-          if (attempts < 60) {
-            setTimeout(tryInit, 500); // retry every 500ms up to 30 seconds
-          } else {
-            console.error("[Paddle] Could not initialize after 30s");
+      const script = document.createElement("script");
+      script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
+      script.onload = () => {
+        // Wait 2s for Paddle's async URL fetch to complete before Initialize()
+        setTimeout(() => {
+          try {
+            window.Paddle.Environment.set(env);
+            window.Paddle.Initialize({ token });
+            window._paddle = window.Paddle;
+            window._paddleReady = true;
+            console.log("[Paddle] Ready on attempt", attempt);
+          } catch (e) {
+            console.warn("[Paddle] Attempt", attempt, "failed, retrying...");
+            if (attempt < 5) setTimeout(() => loadAndInit(attempt + 1), 1000);
           }
-        }
+        }, 2000);
       };
-
-      setTimeout(tryInit, 500);
+      document.head.appendChild(script);
     };
-    document.head.appendChild(script);
+
+    loadAndInit();
   }, []);
 
   return null;
