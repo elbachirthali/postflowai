@@ -32,9 +32,9 @@ export default function PaddleInit() {
             } catch (e2) {
               console.error("[Paddle] Failed:", e2);
             }
-          }, 1000);
+          }, 2000);
         }
-      }, 1500);
+      }, 3000);
     };
     document.head.appendChild(script);
   }, []);
