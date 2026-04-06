@@ -27,12 +27,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      {/* eslint-disable-next-line @next/next/no-head-element */}
-      <head>
-        {/* Paddle Billing — must load before PaddleInit polls for window.Paddle */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script src="https://cdn.paddle.com/paddle/v2/paddle.js" />
-      </head>
       <body className={inter.className}>
         <PaddleInit />
         <AuthProvider>{children}</AuthProvider>
