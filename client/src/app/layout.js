@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
+import PaddleInit from "@/components/PaddleInit";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <script src="https://cdn.paddle.com/paddle/v2/paddle.js" async />
       </head>
       <body className={inter.className}>
+        <PaddleInit />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

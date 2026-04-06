@@ -73,7 +73,7 @@ export function openCheckout({ priceId, email, userId, currency = "EUR", onSucce
     return;
   }
 
-  initPaddle(); // ensure initialized before opening
+  // Paddle is initialized by PaddleInit component in layout.js
 
   // Map currency to Paddle locale for correct display
   const localeMap = { EUR: "fr", USD: "en" };
