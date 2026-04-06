@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { initializePaddle } from "@paddle/paddle-js";
 
 export default function PaddleInit() {
   useEffect(() => {
@@ -11,26 +12,15 @@ export default function PaddleInit() {
       return;
     }
 
-    let attempts = 0;
-    const interval = setInterval(() => {
-      attempts++;
-      if (typeof window.Paddle !== "undefined") {
-        clearInterval(interval);
-        try {
-          window.Paddle.Environment.set(env);
-          window.Paddle.Initialize({ token });
+    initializePaddle({ environment: env, token })
+      .then((paddle) => {
+        if (paddle) {
+          window._paddle = paddle;
           window._paddleReady = true;
           console.log("[Paddle] Initialized successfully");
-        } catch (e) {
-          console.error("[Paddle] Init error:", e);
         }
-      } else if (attempts >= 100) {
-        clearInterval(interval);
-        console.warn("[Paddle] Timed out waiting for paddle.js");
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
+      })
+      .catch((e) => console.error("[Paddle] Init error:", e));
   }, []);
 
   return null;
