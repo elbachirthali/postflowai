@@ -4,23 +4,28 @@ export const PRICE_IDS = {
 };
 
 export function openCheckout({ priceId, email, userId, currency = "EUR", onSuccess }) {
-  if (typeof window === "undefined") return;
-  if (!priceId) { console.warn("[Paddle] priceId required"); return; }
+  console.log("[Paddle] openCheckout called", { priceId, email, _paddleReady: window._paddleReady, _paddle: !!window._paddle });
 
-  const localeMap = { EUR: "fr", USD: "en" };
+  if (typeof window === "undefined") return;
+  if (!priceId) { console.warn("[Paddle] priceId is empty! Check NEXT_PUBLIC_PADDLE_STANDARD_PRICE_ID env var"); return; }
 
   const doOpen = (paddle) => {
-    paddle.Checkout.open({
-      items: [{ priceId, quantity: 1 }],
-      ...(email ? { customer: { email } } : {}),
-      customData: { ...(userId ? { userId } : {}), currency },
-      settings: { displayMode: "overlay", theme: "light", locale: localeMap[currency] || "fr" },
-      eventCallback(event) {
-        if (event.name === "checkout.completed" && typeof onSuccess === "function") {
-          onSuccess(event.data);
-        }
-      },
-    });
+    console.log("[Paddle] calling Checkout.open with priceId:", priceId);
+    try {
+      paddle.Checkout.open({
+        items: [{ priceId, quantity: 1 }],
+        ...(email ? { customer: { email } } : {}),
+        customData: { ...(userId ? { userId } : {}), currency },
+        settings: { displayMode: "overlay", theme: "light" },
+        eventCallback(event) {
+          if (event.name === "checkout.completed" && typeof onSuccess === "function") {
+            onSuccess(event.data);
+          }
+        },
+      });
+    } catch(e) {
+      console.error("[Paddle] Checkout.open error:", e);
+    }
   };
 
   if (window._paddleReady && window._paddle) {
@@ -28,6 +33,7 @@ export function openCheckout({ priceId, email, userId, currency = "EUR", onSucce
     return;
   }
 
+  console.log("[Paddle] Not ready yet, polling...");
   let attempts = 0;
   const interval = setInterval(() => {
     attempts++;
@@ -36,7 +42,7 @@ export function openCheckout({ priceId, email, userId, currency = "EUR", onSucce
       doOpen(window._paddle);
     } else if (attempts >= 50) {
       clearInterval(interval);
-      console.warn("[Paddle] Timed out waiting for initialization.");
+      console.warn("[Paddle] Timed out. _paddleReady:", window._paddleReady, "_paddle:", !!window._paddle);
     }
   }, 100);
 }
