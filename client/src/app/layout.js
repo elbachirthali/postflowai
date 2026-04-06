@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { AuthProvider } from "@/context/AuthContext";
-import PaddleInit from "@/components/PaddleInit";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,11 +27,19 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <script src="https://cdn.paddle.com/paddle/v2/paddle.js" async />
-      </head>
       <body className={inter.className}>
-        <PaddleInit />
+        <Script
+          src="https://cdn.paddle.com/paddle/v2/paddle.js"
+          strategy="afterInteractive"
+          onLoad={() => {
+            const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
+            const env = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT || "production";
+            if (token && window.Paddle) {
+              window.Paddle.Environment.set(env);
+              window.Paddle.Initialize({ token });
+            }
+          }}
+        />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
