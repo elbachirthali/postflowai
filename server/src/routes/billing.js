@@ -1,9 +1,58 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { authMiddleware } from '../middleware/auth.js';
 import crypto from 'crypto';
 
 const router = Router();
 const prisma = new PrismaClient();
+
+/**
+ * POST /api/billing/checkout-link
+ * Creates a Paddle hosted checkout URL via the Paddle v2 API.
+ * Returns { url } which the frontend redirects to.
+ */
+router.post('/checkout-link', authMiddleware, async (req, res, next) => {
+  try {
+    const { priceId } = req.body;
+    if (!priceId) return res.status(400).json({ error: 'priceId is required' });
+
+    const user = await prisma.user.findUnique({ where: { id: req.userId } });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const paddleEnv = process.env.PADDLE_ENVIRONMENT || 'production';
+    const apiBase   = paddleEnv === 'sandbox'
+      ? 'https://sandbox-api.paddle.com'
+      : 'https://api.paddle.com';
+
+    const response = await fetch(`${apiBase}/transactions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.PADDLE_SECRET_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        items: [{ price_id: priceId, quantity: 1 }],
+        customer: { email: user.email },
+        custom_data: { userId: user.id },
+        checkout: { url: `${process.env.CLIENT_URL || 'https://postunivers.com'}/dashboard` },
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('[Paddle] Transaction create error:', data);
+      return res.status(500).json({ error: 'Failed to create checkout link' });
+    }
+
+    const checkoutUrl = data?.data?.checkout?.url;
+    if (!checkoutUrl) return res.status(500).json({ error: 'No checkout URL returned' });
+
+    res.json({ url: checkoutUrl });
+  } catch (err) {
+    next(err);
+  }
+});
 
 /**
  * Map your Paddle price IDs → internal plan names.

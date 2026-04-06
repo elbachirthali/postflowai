@@ -9,7 +9,12 @@ import {
   Eye, EyeOff, Loader2, CheckCircle, Zap,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { openCheckout, PRICE_IDS } from "@/lib/paddle";
+
+const PRICE_IDS = {
+  standard: process.env.NEXT_PUBLIC_PADDLE_STANDARD_PRICE_ID || "",
+  pro:      process.env.NEXT_PUBLIC_PADDLE_PRO_PRICE_ID      || "",
+};
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 // Plan meta shown in the form banner
 const PLAN_META = {
@@ -80,12 +85,24 @@ function RegisterForm() {
           Click below to complete your <span className="font-semibold capitalize">{plan}</span> subscription.
         </p>
         <button
-          onClick={() => openCheckout({
-            priceId:   PRICE_IDS[plan],
-            email:     paidUser?.email,
-            userId:    paidUser?.id,
-            onSuccess: () => router.push("/dashboard"),
-          })}
+          onClick={async () => {
+            try {
+              const token = localStorage.getItem("pu_token");
+              const res = await fetch(`${API}/api/billing/checkout-link`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({ priceId: PRICE_IDS[plan] }),
+              });
+              const data = await res.json();
+              if (data.url) window.location.href = data.url;
+              else alert("Could not create checkout link. Please try again.");
+            } catch (e) {
+              alert("Error connecting to payment. Please try again.");
+            }
+          }}
           className="w-full py-3.5 rounded-xl bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-500/20 mb-4"
         >
           Complete Payment →
