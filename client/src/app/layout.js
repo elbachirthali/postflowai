@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,17 +26,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script src="https://cdn.paddle.com/paddle/v2/paddle.js" async />
+      </head>
       <body className={inter.className}>
-        {/*
-          Paddle Billing JS — loaded after the page is interactive.
-          initPaddle() is called lazily inside openCheckout() in lib/paddle.js
-          so no onLoad handler is needed here.
-        */}
-        <Script
-          src="https://cdn.paddle.com/paddle/v2/paddle.js"
-          strategy="beforeInteractive"
-        />
-
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
