@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
         */}
         <Script
           src="https://cdn.paddle.com/paddle/v2/paddle.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
 
         <AuthProvider>{children}</AuthProvider>

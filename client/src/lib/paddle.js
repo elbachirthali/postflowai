@@ -51,15 +51,29 @@ export function initPaddle() {
  * @param {Function}[opts.onSuccess] – called when checkout.completed fires
  */
 export function openCheckout({ priceId, email, userId, currency = "EUR", onSuccess }) {
-  if (typeof window === "undefined" || typeof window.Paddle === "undefined") {
-    console.warn("[Paddle] Cannot open checkout — paddle.js not ready.");
-    return;
-  }
-  initPaddle(); // ensure initialized before opening
+  if (typeof window === "undefined") return;
   if (!priceId) {
     console.warn("[Paddle] priceId is required to open checkout.");
     return;
   }
+
+  // Wait for Paddle.js to load if not ready yet (up to 5 seconds)
+  if (typeof window.Paddle === "undefined") {
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts++;
+      if (typeof window.Paddle !== "undefined") {
+        clearInterval(interval);
+        openCheckout({ priceId, email, userId, currency, onSuccess });
+      } else if (attempts >= 50) {
+        clearInterval(interval);
+        console.warn("[Paddle] paddle.js failed to load after 5 seconds.");
+      }
+    }, 100);
+    return;
+  }
+
+  initPaddle(); // ensure initialized before opening
 
   // Map currency to Paddle locale for correct display
   const localeMap = { EUR: "fr", USD: "en" };
