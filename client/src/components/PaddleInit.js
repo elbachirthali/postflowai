@@ -12,29 +12,27 @@ export default function PaddleInit() {
     script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
     script.async = true;
     script.onload = () => {
-      // Wait 1.5s for Paddle's internal sub-scripts (ProfitWell etc.) to finish
-      setTimeout(() => {
+      let attempts = 0;
+
+      const tryInit = () => {
+        attempts++;
         try {
           window.Paddle.Environment.set(env);
           window.Paddle.Initialize({ token });
+          // Only reaches here if no error thrown
           window._paddle = window.Paddle;
           window._paddleReady = true;
-          console.log("[Paddle] Ready");
+          console.log("[Paddle] Ready after", attempts, "attempt(s)");
         } catch (e) {
-          // Retry after another second if still not ready
-          setTimeout(() => {
-            try {
-              window.Paddle.Environment.set(env);
-              window.Paddle.Initialize({ token });
-              window._paddle = window.Paddle;
-              window._paddleReady = true;
-              console.log("[Paddle] Ready (retry)");
-            } catch (e2) {
-              console.error("[Paddle] Failed:", e2);
-            }
-          }, 2000);
+          if (attempts < 60) {
+            setTimeout(tryInit, 500); // retry every 500ms up to 30 seconds
+          } else {
+            console.error("[Paddle] Could not initialize after 30s");
+          }
         }
-      }, 3000);
+      };
+
+      setTimeout(tryInit, 500);
     };
     document.head.appendChild(script);
   }, []);
