@@ -1,26 +1,42 @@
 "use client";
 
 import { useEffect } from "react";
-import { initializePaddle } from "@paddle/paddle-js";
 
 export default function PaddleInit() {
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
     const env   = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT || "production";
-    if (!token) {
-      console.warn("[Paddle] No client token found");
-      return;
-    }
+    if (!token) { console.warn("[Paddle] No token"); return; }
 
-    initializePaddle({ environment: env, token })
-      .then((paddle) => {
-        if (paddle) {
-          window._paddle = paddle;
+    const script = document.createElement("script");
+    script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
+    script.async = true;
+    script.onload = () => {
+      // Wait 1.5s for Paddle's internal sub-scripts (ProfitWell etc.) to finish
+      setTimeout(() => {
+        try {
+          window.Paddle.Environment.set(env);
+          window.Paddle.Initialize({ token });
+          window._paddle = window.Paddle;
           window._paddleReady = true;
-          console.log("[Paddle] Initialized successfully");
+          console.log("[Paddle] Ready");
+        } catch (e) {
+          // Retry after another second if still not ready
+          setTimeout(() => {
+            try {
+              window.Paddle.Environment.set(env);
+              window.Paddle.Initialize({ token });
+              window._paddle = window.Paddle;
+              window._paddleReady = true;
+              console.log("[Paddle] Ready (retry)");
+            } catch (e2) {
+              console.error("[Paddle] Failed:", e2);
+            }
+          }, 1000);
         }
-      })
-      .catch((e) => console.error("[Paddle] Init error:", e));
+      }, 1500);
+    };
+    document.head.appendChild(script);
   }, []);
 
   return null;
