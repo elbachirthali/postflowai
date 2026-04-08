@@ -26,7 +26,7 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
 
     const successUrl = `${process.env.CLIENT_URL || 'https://postunivers.com'}/dashboard`;
 
-    // Step 1: create transaction (draft)
+    // Step 1: create transaction — omit customer so Paddle sets status=ready automatically
     const createRes = await fetch(`${apiBase}/transactions`, {
       method: 'POST',
       headers: {
@@ -35,7 +35,6 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
       },
       body: JSON.stringify({
         items: [{ price_id: priceId, quantity: 1 }],
-        customer: { email: user.email },
         custom_data: { userId: user.id },
         checkout: { url: successUrl },
       }),
@@ -52,22 +51,7 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
     const txnId = createData?.data?.id;
     if (!txnId) return res.status(500).json({ error: 'No transaction ID returned' });
 
-    // Step 2: update to ready so Paddle generates a hosted checkout URL
-    const updateRes = await fetch(`${apiBase}/transactions/${txnId}`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${process.env.PADDLE_SECRET_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ status: 'ready' }),
-    });
-
-    const updateData = await updateRes.json();
-    console.log('[Paddle] Update status:', updateRes.status, JSON.stringify(updateData?.error || updateData?.data?.checkout));
-
-    const checkoutUrl = updateData?.data?.checkout?.url;
-
-    // Fallback: construct URL manually if Paddle still returns success URL
+    const checkoutUrl = createData?.data?.checkout?.url;
     const isPaddleUrl = checkoutUrl && (checkoutUrl.includes('buy.paddle.com') || checkoutUrl.includes('checkout.paddle.com'));
     const finalUrl = isPaddleUrl
       ? checkoutUrl
@@ -75,7 +59,7 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
         ? `https://sandbox-buy.paddle.com/checkout/custom/${txnId}`
         : `https://buy.paddle.com/checkout/custom/${txnId}`;
 
-    console.log('[Paddle] finalUrl:', finalUrl);
+    console.log('[Paddle] status:', createData?.data?.status, '| finalUrl:', finalUrl);
     res.json({ url: finalUrl });
   } catch (err) {
     next(err);
