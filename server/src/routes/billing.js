@@ -31,6 +31,7 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        status: 'ready',
         items: [{ price_id: priceId, quantity: 1 }],
         customer: { email: user.email },
         custom_data: { userId: user.id },
