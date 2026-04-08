@@ -39,6 +39,8 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
     });
 
     const data = await response.json();
+    console.log('[Paddle] Transaction response status:', response.status);
+    console.log('[Paddle] Transaction response data:', JSON.stringify(data));
 
     if (!response.ok) {
       console.error('[Paddle] Transaction create error:', data);
@@ -46,6 +48,7 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
     }
 
     const checkoutUrl = data?.data?.checkout?.url;
+    console.log('[Paddle] checkoutUrl:', checkoutUrl);
     if (!checkoutUrl) return res.status(500).json({ error: 'No checkout URL returned' });
 
     res.json({ url: checkoutUrl });
