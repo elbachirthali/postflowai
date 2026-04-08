@@ -47,9 +47,20 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
       return res.status(500).json({ error: 'Failed to create checkout link' });
     }
 
-    const checkoutUrl = data?.data?.checkout?.url;
+    const txnId = data?.data?.id;
+    const returnedUrl = data?.data?.checkout?.url || '';
+
+    // Paddle sometimes returns our success URL instead of a hosted checkout URL.
+    // If so, construct the checkout URL manually from the transaction ID.
+    const isPaddleCheckoutUrl = returnedUrl.includes('buy.paddle.com') || returnedUrl.includes('checkout.paddle.com');
+    const checkoutUrl = isPaddleCheckoutUrl
+      ? returnedUrl
+      : paddleEnv === 'sandbox'
+        ? `https://sandbox-buy.paddle.com/checkout/custom/${txnId}`
+        : `https://buy.paddle.com/checkout/custom/${txnId}`;
+
     console.log('[Paddle] checkoutUrl:', checkoutUrl);
-    if (!checkoutUrl) return res.status(500).json({ error: 'No checkout URL returned' });
+    if (!txnId) return res.status(500).json({ error: 'No transaction ID returned' });
 
     res.json({ url: checkoutUrl });
   } catch (err) {
