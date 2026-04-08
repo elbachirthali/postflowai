@@ -45,7 +45,7 @@ const FEATURES = [
     bg: "bg-emerald-50",
     fg: "text-emerald-600",
     title: "AI Caption Studio",
-    desc: "Claude AI analyzes your content and writes platform-perfect captions — hooks, hashtags, CTAs — optimized for each network's algorithm.",
+    desc: "Our AI analyzes your content and writes platform-perfect captions — hooks, hashtags, CTAs — optimized for each network's algorithm.",
   },
   {
     icon: Globe,
@@ -93,7 +93,7 @@ const STEPS = [
   {
     number: "02",
     title: "AI Generates Your Captions",
-    desc: "Our Claude-powered AI reads your idea and instantly writes tailored captions for every platform you select.",
+    desc: "Our AI reads your idea and instantly writes tailored captions for every platform you select — tone, hashtags, and hooks included.",
   },
   {
     number: "03",
@@ -243,7 +243,7 @@ const FAQS = [
   },
   {
     q: "How does the AI caption generator work?",
-    a: "PostUnivers uses Claude by Anthropic — one of the most advanced AI models available. It analyzes your content idea, selected platforms, and target audience to write captions that match each platform's unique style and algorithm requirements.",
+    a: "PostUnivers uses a state-of-the-art AI engine trained specifically for social media. It analyzes your content idea, selected platforms, and target audience to write captions that match each platform's unique style and algorithm requirements.",
   },
   {
     q: "Is my content and data secure?",
@@ -277,26 +277,22 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden">
 
       {/* ── NAVBAR ─────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
+      <header className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-white/5">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="text-lg font-extrabold tracking-tight">
-              Post<span className="text-emerald-500">Univers</span>
+            <span className="text-lg font-extrabold tracking-tight text-white">
+              Post<span className="text-emerald-400">Univers</span>
             </span>
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-500">
+          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-400">
             {NAV_LINKS.map((l) => (
-              <a
-                key={l.label}
-                href={l.href}
-                className="hover:text-slate-900 transition-colors"
-              >
+              <a key={l.label} href={l.href} className="hover:text-white transition-colors">
                 {l.label}
               </a>
             ))}
@@ -304,17 +300,14 @@ export default function LandingPage() {
 
           {/* Desktop CTAs */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/dashboard"
-              className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
-            >
+            <Link href="/login" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">
               Sign In
             </Link>
-            <Link href="/dashboard">
+            <Link href="/register?plan=standard">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                className="text-sm font-bold bg-emerald-600 text-white px-5 py-2.5 rounded-full hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-500/20"
+                className="text-sm font-bold bg-emerald-500 text-white px-5 py-2.5 rounded-full hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20"
               >
                 Start Free Trial
               </motion.button>
@@ -324,7 +317,7 @@ export default function LandingPage() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition"
+            className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -337,21 +330,17 @@ export default function LandingPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-slate-100 bg-white overflow-hidden"
+              className="md:hidden border-t border-white/5 bg-slate-950 overflow-hidden"
             >
               <div className="px-4 py-5 flex flex-col gap-4">
                 {NAV_LINKS.map((l) => (
-                  <a
-                    key={l.label}
-                    href={l.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-sm font-medium text-slate-600 hover:text-slate-900"
-                  >
+                  <a key={l.label} href={l.href} onClick={() => setMobileOpen(false)}
+                    className="text-sm font-medium text-slate-400 hover:text-white">
                     {l.label}
                   </a>
                 ))}
-                <Link href="/dashboard">
-                  <button className="w-full py-3 rounded-full bg-emerald-600 text-white font-bold text-sm">
+                <Link href="/register?plan=standard">
+                  <button className="w-full py-3 rounded-full bg-emerald-500 text-white font-bold text-sm">
                     Start Free Trial
                   </button>
                 </Link>
@@ -362,19 +351,22 @@ export default function LandingPage() {
       </header>
 
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50/70 to-white pt-20 pb-28 px-4">
-        {/* Subtle glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-emerald-100/60 rounded-full blur-[140px] pointer-events-none" />
+      <section className="relative overflow-hidden bg-slate-950 pt-20 pb-32 px-4">
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
+        {/* Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-[400px] h-[300px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="relative max-w-5xl mx-auto text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-emerald-200 text-xs font-semibold text-emerald-700 mb-8 shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-emerald-400 mb-10 backdrop-blur-sm"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Powered by Claude AI · 1,670+ creators trust us
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            ★ 4.9 · Trusted by 1,670+ creators worldwide
           </motion.div>
 
           {/* Headline */}
@@ -382,11 +374,13 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.08] mb-6"
+            className="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.06] mb-6"
           >
-            Create Once.
+            Stop wasting hours
             <br />
-            <span className="text-gradient">Publish Everywhere.</span>
+            <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+              on social media.
+            </span>
           </motion.h1>
 
           {/* Sub */}
@@ -394,11 +388,11 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            PostUnivers uses AI to generate platform-perfect captions and publish
-            your content to all 8 major social networks — simultaneously, in under
-            60 seconds.
+            Write once. PostUnivers AI generates perfect captions for every platform
+            and publishes everywhere — TikTok, Instagram, LinkedIn, YouTube and more —
+            in under 60 seconds.
           </motion.p>
 
           {/* CTAs */}
@@ -406,23 +400,23 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20"
           >
-            <Link href="/dashboard">
+            <Link href="/register?plan=standard">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                className="bg-emerald-600 text-white font-bold px-8 py-4 rounded-full flex items-center gap-2 hover:bg-emerald-700 transition-colors shadow-xl shadow-emerald-500/25 text-base"
+                className="bg-emerald-500 text-white font-bold px-8 py-4 rounded-full flex items-center gap-2 hover:bg-emerald-400 transition-colors shadow-2xl shadow-emerald-500/30 text-base"
               >
-                Start Free Trial <ArrowRight className="w-4 h-4" />
+                Start Free — 7 Days Free <ArrowRight className="w-4 h-4" />
               </motion.button>
             </Link>
-            <button className="flex items-center gap-3 text-slate-600 font-semibold text-base hover:text-slate-900 transition-colors">
-              <div className="w-11 h-11 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center">
-                <Play className="w-4 h-4 ml-0.5 text-slate-700" />
+            <a href="#how-it-works" className="flex items-center gap-3 text-slate-400 font-semibold text-base hover:text-white transition-colors">
+              <div className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                <Play className="w-4 h-4 ml-0.5 text-white" />
               </div>
-              Watch Demo
-            </button>
+              See how it works
+            </a>
           </motion.div>
 
           {/* Stats */}
@@ -430,14 +424,14 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto mb-16 px-4"
+            className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 rounded-2xl overflow-hidden border border-white/5 max-w-3xl mx-auto mb-16"
           >
             {STATS.map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-extrabold text-slate-900">
+              <div key={s.label} className="text-center bg-slate-950 py-6 px-4">
+                <div className="text-3xl md:text-4xl font-extrabold text-white">
                   {s.value}
                 </div>
-                <div className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wide">
+                <div className="text-xs font-semibold text-slate-500 mt-1.5 uppercase tracking-wide">
                   {s.label}
                 </div>
               </div>
@@ -450,7 +444,7 @@ export default function LandingPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.55 }}
           >
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-5">
               Publish to all major platforms
             </p>
             <div className="flex flex-wrap justify-center gap-3">
@@ -458,9 +452,10 @@ export default function LandingPage() {
                 <div
                   key={p.name}
                   title={p.name}
-                  className={`group w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center ring-2 ring-transparent transition-all ${p.ring} hover:shadow-md cursor-pointer`}
+                  className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
                 >
-                  <p.icon className={`w-5 h-5 ${p.color}`} />
+                  <p.icon className={`w-4 h-4 ${p.color}`} />
+                  <span className="text-xs font-semibold text-slate-300">{p.name}</span>
                 </div>
               ))}
             </div>
@@ -890,76 +885,73 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA BANNER ─────────────────────────────────────────────────────── */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
+      <section className="py-24 bg-slate-950 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="relative max-w-3xl mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative bg-slate-900 rounded-3xl px-8 py-16 text-center overflow-hidden"
           >
-            {/* Decorative glows */}
-            <div className="absolute -top-24 -left-24 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-            <div className="relative">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-500 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-500/30">
-                <Sparkles className="w-7 h-7 text-white" />
-              </div>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-                Ready to grow your audience?
-              </h2>
-              <p className="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
-                Join 1,670+ creators who publish smarter with PostUnivers. Start
-                your free trial — no credit card required.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link href="/dashboard">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="bg-emerald-500 text-white font-bold px-8 py-4 rounded-full flex items-center gap-2 hover:bg-emerald-400 transition-colors text-base shadow-lg shadow-emerald-500/20"
-                  >
-                    Start Free Trial <ArrowRight className="w-4 h-4" />
-                  </motion.button>
-                </Link>
-                <a
-                  href="#pricing"
-                  className="text-slate-400 font-semibold text-sm hover:text-white transition-colors"
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              No credit card required
+            </div>
+            <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-5 leading-tight">
+              Your audience is waiting.
+              <br />
+              <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                Start posting smarter.
+              </span>
+            </h2>
+            <p className="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
+              Join 1,670+ creators saving 10+ hours a week with PostUnivers.
+              7-day free trial, cancel anytime.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/register?plan=standard">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="bg-emerald-500 text-white font-bold px-10 py-4 rounded-full flex items-center gap-2 hover:bg-emerald-400 transition-colors text-base shadow-2xl shadow-emerald-500/30"
                 >
-                  View Pricing →
-                </a>
-              </div>
+                  Get Started Free <ArrowRight className="w-4 h-4" />
+                </motion.button>
+              </Link>
+              <a href="#pricing" className="text-slate-500 font-semibold text-sm hover:text-white transition-colors">
+                See pricing →
+              </a>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* ── FOOTER ─────────────────────────────────────────────────────────── */}
-      <footer className="bg-slate-50 border-t border-slate-100 pt-16 pb-8">
+      <footer className="bg-slate-950 border-t border-white/5 pt-16 pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             {/* Brand col */}
             <div className="col-span-2 md:col-span-1">
               <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-emerald-400" />
+                <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-extrabold text-slate-900 tracking-tight">
-                  Post<span className="text-emerald-500">Univers</span>
+                <span className="font-extrabold text-white tracking-tight">
+                  Post<span className="text-emerald-400">Univers</span>
                 </span>
               </Link>
-              <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
+              <p className="text-sm text-slate-500 leading-relaxed max-w-xs">
                 AI-powered social media management. Create once, publish everywhere.
               </p>
             </div>
 
             {/* Product */}
             <div>
-              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
                 Product
               </h4>
-              <ul className="space-y-2.5 text-sm text-slate-400">
+              <ul className="space-y-2.5 text-sm text-slate-500">
                 {[
                   ["Features", "#features"],
                   ["Pricing", "#pricing"],
@@ -967,7 +959,7 @@ export default function LandingPage() {
                   ["Dashboard", "/dashboard"],
                 ].map(([label, href]) => (
                   <li key={label}>
-                    <a href={href} className="hover:text-slate-900 transition-colors">
+                    <a href={href} className="hover:text-white transition-colors">
                       {label}
                     </a>
                   </li>
@@ -977,10 +969,10 @@ export default function LandingPage() {
 
             {/* Resources */}
             <div>
-              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
                 Resources
               </h4>
-              <ul className="space-y-2.5 text-sm text-slate-400">
+              <ul className="space-y-2.5 text-sm text-slate-500">
                 {[
                   ["Blog", "#blog"],
                   ["Help Center", "#"],
@@ -988,7 +980,7 @@ export default function LandingPage() {
                   ["Changelog", "#"],
                 ].map(([label, href]) => (
                   <li key={label}>
-                    <a href={href} className="hover:text-slate-900 transition-colors">
+                    <a href={href} className="hover:text-white transition-colors">
                       {label}
                     </a>
                   </li>
@@ -998,10 +990,10 @@ export default function LandingPage() {
 
             {/* Legal */}
             <div>
-              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
                 Legal
               </h4>
-              <ul className="space-y-2.5 text-sm text-slate-400">
+              <ul className="space-y-2.5 text-sm text-slate-500">
                 {[
                   ["Privacy Policy", "/privacy"],
                   ["Terms of Service", "/terms"],
@@ -1009,7 +1001,7 @@ export default function LandingPage() {
                   ["Contact", "mailto:hello@postunivers.com"],
                 ].map(([label, href]) => (
                   <li key={label}>
-                    <a href={href} className="hover:text-slate-900 transition-colors">
+                    <a href={href} className="hover:text-white transition-colors">
                       {label}
                     </a>
                   </li>
@@ -1018,18 +1010,18 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-slate-200 gap-4">
-            <p className="text-sm text-slate-400">
-              © 2026 PostUnivers. Built for creators everywhere.
+          <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/5 gap-4">
+            <p className="text-sm text-slate-600">
+              © 2026 PostUnivers. All rights reserved.
             </p>
             <div className="flex items-center gap-5">
-              <a href="#" className="text-slate-400 hover:text-slate-700 transition-colors">
+              <a href="#" className="text-slate-600 hover:text-white transition-colors">
                 <Twitter className="w-4 h-4" />
               </a>
-              <a href="#" className="text-slate-400 hover:text-slate-700 transition-colors">
+              <a href="#" className="text-slate-600 hover:text-white transition-colors">
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href="#" className="text-slate-400 hover:text-slate-700 transition-colors">
+              <a href="#" className="text-slate-600 hover:text-white transition-colors">
                 <Linkedin className="w-4 h-4" />
               </a>
             </div>
