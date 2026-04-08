@@ -51,16 +51,9 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
     const txnId = createData?.data?.id;
     if (!txnId) return res.status(500).json({ error: 'No transaction ID returned' });
 
-    const checkoutUrl = createData?.data?.checkout?.url;
-    const isPaddleUrl = checkoutUrl && (checkoutUrl.includes('buy.paddle.com') || checkoutUrl.includes('checkout.paddle.com'));
-    const finalUrl = isPaddleUrl
-      ? checkoutUrl
-      : paddleEnv === 'sandbox'
-        ? `https://sandbox-buy.paddle.com/checkout/custom/${txnId}`
-        : `https://buy.paddle.com/checkout/custom/${txnId}`;
-
-    console.log('[Paddle] status:', createData?.data?.status, '| finalUrl:', finalUrl);
-    res.json({ url: finalUrl });
+    console.log('[Paddle] txnId:', txnId, '| status:', createData?.data?.status);
+    // Return txnId so the client can open Paddle.js overlay
+    res.json({ txnId });
   } catch (err) {
     next(err);
   }

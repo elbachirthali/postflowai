@@ -73,6 +73,61 @@ function RegisterForm() {
     }
   }
 
+  const [payLoading, setPayLoading] = useState(false);
+  const [payError,   setPayError]   = useState("");
+
+  // Load Paddle.js as soon as "Account created" screen shows
+  useEffect(() => {
+    if (!done) return;
+    if (window.Paddle) return;
+    const s = document.createElement("script");
+    s.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
+    s.async = true;
+    document.head.appendChild(s);
+  }, [done]);
+
+  async function handlePayment() {
+    setPayLoading(true);
+    setPayError("");
+    try {
+      // 1. Create transaction on server → get txnId
+      const token = localStorage.getItem("pu_token");
+      const res = await fetch(`${API}/api/billing/checkout-link`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify({ priceId: PRICE_IDS[plan] }),
+      });
+      const data = await res.json();
+      if (!data.txnId) { setPayError("Could not create checkout. Please try again."); return; }
+
+      // 2. Wait for Paddle.js to load (max 10s)
+      await new Promise((resolve, reject) => {
+        const start = Date.now();
+        const check = () => {
+          if (window.Paddle?.Checkout) { resolve(); return; }
+          if (Date.now() - start > 10000) { reject(new Error("Paddle load timeout")); return; }
+          setTimeout(check, 300);
+        };
+        check();
+      });
+
+      // 3. Initialize Paddle (ignore profitwellSnippetBase error — cosmetic only)
+      if (!window._paddleInitialized) {
+        const env = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT || "production";
+        if (env === "sandbox") window.Paddle.Environment.set("sandbox");
+        try { window.Paddle.Initialize({ token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN }); } catch {}
+        window._paddleInitialized = true;
+      }
+
+      // 4. Open checkout overlay with the transaction ID
+      window.Paddle.Checkout.open({ transactionId: data.txnId });
+    } catch (e) {
+      setPayError(e.message || "Payment error. Please try again.");
+    } finally {
+      setPayLoading(false);
+    }
+  }
+
   // If Paddle checkout was opened, show a waiting screen
   if (done) {
     return (
@@ -84,28 +139,15 @@ function RegisterForm() {
         <p className="text-slate-500 text-sm mb-6">
           Click below to complete your <span className="font-semibold capitalize">{plan}</span> subscription.
         </p>
+        {payError && (
+          <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2 mb-4">{payError}</p>
+        )}
         <button
-          onClick={async () => {
-            try {
-              const token = localStorage.getItem("pu_token");
-              const res = await fetch(`${API}/api/billing/checkout-link`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `Bearer ${token}`,
-                },
-                body: JSON.stringify({ priceId: PRICE_IDS[plan] }),
-              });
-              const data = await res.json();
-              if (data.url) window.location.href = data.url;
-              else alert("Could not create checkout link. Please try again.");
-            } catch (e) {
-              alert("Error connecting to payment. Please try again.");
-            }
-          }}
-          className="w-full py-3.5 rounded-xl bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-500/20 mb-4"
+          onClick={handlePayment}
+          disabled={payLoading}
+          className="w-full py-3.5 rounded-xl bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-700 disabled:opacity-60 transition-colors shadow-md shadow-emerald-500/20 mb-4 flex items-center justify-center gap-2"
         >
-          Complete Payment →
+          {payLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Complete Payment →"}
         </button>
         <button
           onClick={() => router.push("/dashboard")}
