@@ -24,46 +24,59 @@ router.post('/checkout-link', authMiddleware, async (req, res, next) => {
       ? 'https://sandbox-api.paddle.com'
       : 'https://api.paddle.com';
 
-    const response = await fetch(`${apiBase}/transactions`, {
+    const successUrl = `${process.env.CLIENT_URL || 'https://postunivers.com'}/dashboard`;
+
+    // Step 1: create transaction (draft)
+    const createRes = await fetch(`${apiBase}/transactions`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.PADDLE_SECRET_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        status: 'ready',
         items: [{ price_id: priceId, quantity: 1 }],
         customer: { email: user.email },
         custom_data: { userId: user.id },
-        checkout: { url: `${process.env.CLIENT_URL || 'https://postunivers.com'}/dashboard` },
+        checkout: { url: successUrl },
       }),
     });
 
-    const data = await response.json();
-    console.log('[Paddle] Transaction response status:', response.status);
-    console.log('[Paddle] Transaction response data:', JSON.stringify(data));
+    const createData = await createRes.json();
+    console.log('[Paddle] Create status:', createRes.status, JSON.stringify(createData?.error || createData?.data?.id));
 
-    if (!response.ok) {
-      console.error('[Paddle] Transaction create error:', data);
+    if (!createRes.ok) {
+      console.error('[Paddle] Create error:', createData);
       return res.status(500).json({ error: 'Failed to create checkout link' });
     }
 
-    const txnId = data?.data?.id;
-    const returnedUrl = data?.data?.checkout?.url || '';
+    const txnId = createData?.data?.id;
+    if (!txnId) return res.status(500).json({ error: 'No transaction ID returned' });
 
-    // Paddle sometimes returns our success URL instead of a hosted checkout URL.
-    // If so, construct the checkout URL manually from the transaction ID.
-    const isPaddleCheckoutUrl = returnedUrl.includes('buy.paddle.com') || returnedUrl.includes('checkout.paddle.com');
-    const checkoutUrl = isPaddleCheckoutUrl
-      ? returnedUrl
+    // Step 2: update to ready so Paddle generates a hosted checkout URL
+    const updateRes = await fetch(`${apiBase}/transactions/${txnId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${process.env.PADDLE_SECRET_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: 'ready' }),
+    });
+
+    const updateData = await updateRes.json();
+    console.log('[Paddle] Update status:', updateRes.status, JSON.stringify(updateData?.error || updateData?.data?.checkout));
+
+    const checkoutUrl = updateData?.data?.checkout?.url;
+
+    // Fallback: construct URL manually if Paddle still returns success URL
+    const isPaddleUrl = checkoutUrl && (checkoutUrl.includes('buy.paddle.com') || checkoutUrl.includes('checkout.paddle.com'));
+    const finalUrl = isPaddleUrl
+      ? checkoutUrl
       : paddleEnv === 'sandbox'
         ? `https://sandbox-buy.paddle.com/checkout/custom/${txnId}`
         : `https://buy.paddle.com/checkout/custom/${txnId}`;
 
-    console.log('[Paddle] checkoutUrl:', checkoutUrl);
-    if (!txnId) return res.status(500).json({ error: 'No transaction ID returned' });
-
-    res.json({ url: checkoutUrl });
+    console.log('[Paddle] finalUrl:', finalUrl);
+    res.json({ url: finalUrl });
   } catch (err) {
     next(err);
   }
