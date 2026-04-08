@@ -259,6 +259,16 @@ const FAQS = [
   },
 ];
 
+// ─── FEATURE GLOW COLORS ──────────────────────────────────────────────────────
+const FEATURE_COLORS = [
+  { icon: "from-emerald-400 to-teal-500",   glow: "group-hover:shadow-emerald-500/20" },
+  { icon: "from-blue-400 to-cyan-500",      glow: "group-hover:shadow-blue-500/20"    },
+  { icon: "from-violet-400 to-purple-500",  glow: "group-hover:shadow-violet-500/20"  },
+  { icon: "from-orange-400 to-amber-500",   glow: "group-hover:shadow-orange-500/20"  },
+  { icon: "from-pink-400 to-rose-500",      glow: "group-hover:shadow-pink-500/20"    },
+  { icon: "from-slate-400 to-slate-600",    glow: "group-hover:shadow-slate-500/20"   },
+];
+
 // ─── COMPONENT ────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
@@ -274,7 +284,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#030712] text-white font-sans overflow-x-hidden">
 
       {/* ── NAVBAR ─────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-white/5">
@@ -464,84 +474,114 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES ───────────────────────────────────────────────────────── */}
-      <section id="features" className="py-24 bg-white border-t border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider mb-4">
-              Features
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
-              Everything you need to dominate
-              <br className="hidden md:block" /> social media
-            </h2>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-              Stop paying $100/month for multiple tools. PostUnivers combines AI
-              content creation and cross-platform publishing in one clean dashboard.
-            </p>
+      <section id="features" className="py-28 relative">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-dark text-xs font-bold text-emerald-400 uppercase tracking-widest mb-6"
+            >
+              <Sparkles className="w-3 h-3" /> Features
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-5xl font-extrabold text-white mb-5 leading-tight"
+            >
+              Everything you need to
+              <br />
+              <span className="text-gradient-green">dominate social media</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="text-lg text-slate-400 max-w-2xl mx-auto"
+            >
+              Stop juggling five tools. PostUnivers combines AI content creation and
+              cross-platform publishing in one beautiful dashboard.
+            </motion.p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map((f, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07 }}
-                className="group p-8 rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-lg transition-all bg-white cursor-default"
-              >
-                <div
-                  className={`w-11 h-11 rounded-xl flex items-center justify-center mb-5 ${f.bg}`}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {FEATURES.map((f, i) => {
+              const c = FEATURE_COLORS[i];
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, ease: "easeOut" }}
+                  whileHover={{ y: -6 }}
+                  className={`group glass-dark rounded-2xl p-7 cursor-default transition-all duration-300 hover:shadow-2xl ${c.glow}`}
                 >
-                  <f.icon className={`w-5 h-5 ${f.fg}`} />
-                </div>
-                <h3 className="text-base font-bold text-slate-900 mb-2">{f.title}</h3>
-                <p className="text-slate-500 leading-relaxed text-sm">{f.desc}</p>
-              </motion.div>
-            ))}
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${c.icon} flex items-center justify-center mb-5 shadow-lg`}>
+                    <f.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-base font-bold text-white mb-2.5">{f.title}</h3>
+                  <p className="text-slate-400 leading-relaxed text-sm">{f.desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* ── HOW IT WORKS ───────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="py-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="inline-block px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-4">
+      <section id="how-it-works" className="py-28 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/10 to-transparent pointer-events-none" />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-dark text-xs font-bold text-emerald-400 uppercase tracking-widest mb-6"
+            >
               How It Works
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-5xl font-extrabold text-white mb-5"
+            >
               From idea to published
-              <br className="hidden md:block" /> in under 60 seconds
-            </h2>
-            <p className="text-lg text-slate-500 max-w-xl mx-auto">
-              No complexity, no learning curve. Three simple steps to grow your
-              presence everywhere.
-            </p>
+              <br />
+              <span className="text-gradient-green">in under 60 seconds</span>
+            </motion.h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+            {/* Connector line */}
+            <div className="hidden md:block absolute top-14 left-[calc(16.66%+2rem)] right-[calc(16.66%+2rem)] h-px bg-gradient-to-r from-emerald-500/50 via-emerald-500/20 to-emerald-500/50" />
+
             {STEPS.map((step, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.12 }}
-                className="relative bg-white rounded-2xl p-8 border border-slate-100 shadow-sm text-center"
+                transition={{ delay: i * 0.15, ease: "easeOut" }}
+                className="relative glass-dark rounded-2xl p-8 text-center group"
               >
-                <div className="w-12 h-12 rounded-full bg-emerald-600 text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-6 shadow-md shadow-emerald-500/30">
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30"
+                >
                   {i + 1}
-                </div>
-                <h3 className="text-base font-bold text-slate-900 mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
-                {i < STEPS.length - 1 && (
-                  <div className="hidden md:block absolute top-12 -right-4 z-10 text-slate-300">
-                    <ArrowRight className="w-5 h-5" />
-                  </div>
-                )}
+                </motion.div>
+                <h3 className="text-base font-bold text-white mb-3">{step.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -549,100 +589,92 @@ export default function LandingPage() {
       </section>
 
       {/* ── PRICING ────────────────────────────────────────────────────────── */}
-      <section id="pricing" className="py-24 bg-white border-t border-slate-100">
+      <section id="pricing" className="py-28 relative">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider mb-4">
+          <div className="text-center mb-14">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-dark text-xs font-bold text-emerald-400 uppercase tracking-widest mb-6"
+            >
               Pricing
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-3">
-              Simple, transparent pricing
-            </h2>
-            <p className="text-lg text-slate-500 mb-8">
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-5xl font-extrabold text-white mb-4"
+            >
+              Invest in your growth
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="text-slate-400 text-lg mb-10"
+            >
               No hidden fees. Cancel anytime.
-            </p>
+            </motion.p>
 
             {/* Billing + Currency toggles */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <div className="inline-flex items-center bg-slate-100 p-1 rounded-full gap-1">
-                <button
-                  onClick={() => setAnnual(false)}
-                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
-                    !annual
-                      ? "bg-white text-slate-900 shadow-sm"
-                      : "text-slate-500 hover:text-slate-700"
-                  }`}
-                >
+              <div className="inline-flex items-center glass-dark p-1 rounded-full gap-1">
+                <button onClick={() => setAnnual(false)}
+                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${!annual ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300"}`}>
                   Monthly
                 </button>
-                <button
-                  onClick={() => setAnnual(true)}
-                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 ${
-                    annual
-                      ? "bg-white text-slate-900 shadow-sm"
-                      : "text-slate-500 hover:text-slate-700"
-                  }`}
-                >
+                <button onClick={() => setAnnual(true)}
+                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 ${annual ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300"}`}>
                   Annual
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                    −15%
-                  </span>
+                  <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">−15%</span>
                 </button>
               </div>
-              <div className="inline-flex items-center bg-slate-100 p-1 rounded-full gap-1">
-                <button
-                  onClick={() => setCurrency("EUR")}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                    currency === "EUR"
-                      ? "bg-white text-slate-900 shadow-sm"
-                      : "text-slate-500 hover:text-slate-700"
-                  }`}
-                >
+              <div className="inline-flex items-center glass-dark p-1 rounded-full gap-1">
+                <button onClick={() => setCurrency("EUR")}
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${currency === "EUR" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300"}`}>
                   € EUR
                 </button>
-                <button
-                  onClick={() => setCurrency("USD")}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                    currency === "USD"
-                      ? "bg-white text-slate-900 shadow-sm"
-                      : "text-slate-500 hover:text-slate-700"
-                  }`}
-                >
+                <button onClick={() => setCurrency("USD")}
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${currency === "USD" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300"}`}>
                   $ USD
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
             {/* Standard */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="bg-white border-2 border-slate-200 rounded-3xl p-8 flex flex-col"
+              whileHover={{ y: -4 }}
+              className="glass-dark rounded-3xl p-8 flex flex-col transition-all duration-300"
             >
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-slate-900 mb-1">
-                  {PRICING_STANDARD.name}
-                </h3>
+                <h3 className="text-xl font-bold text-white mb-1">{PRICING_STANDARD.name}</h3>
                 <p className="text-slate-400 text-sm">{PRICING_STANDARD.desc}</p>
               </div>
               <div className="flex items-end gap-1 mb-8">
-                <span className="text-5xl font-extrabold text-slate-900">
-                  {currencySymbol}{getPrice(PRICING_STANDARD)}
-                </span>
-                <span className="text-slate-400 text-sm mb-1.5">/mo</span>
+                <span className="text-5xl font-extrabold text-white">{currencySymbol}{getPrice(PRICING_STANDARD)}</span>
+                <span className="text-slate-500 text-sm mb-1.5">/mo</span>
               </div>
               <Link href="/register?plan=standard" className="mb-8">
-                <button className="w-full py-3.5 rounded-full border-2 border-slate-900 text-slate-900 font-bold text-sm hover:bg-slate-900 hover:text-white transition-colors">
+                <motion.button
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="w-full py-3.5 rounded-full border border-white/20 text-white font-bold text-sm hover:bg-white/10 transition-colors"
+                >
                   Get Started
-                </button>
+                </motion.button>
               </Link>
               <ul className="space-y-3 mt-auto">
                 {PRICING_STANDARD.features.map((feat) => (
-                  <li key={feat} className="flex items-center gap-3 text-sm text-slate-600">
-                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                  <li key={feat} className="flex items-center gap-3 text-sm text-slate-300">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                     {feat}
                   </li>
                 ))}
@@ -651,40 +683,45 @@ export default function LandingPage() {
 
             {/* Pro */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
+              whileHover={{ y: -4 }}
               transition={{ delay: 0.1 }}
-              className="bg-slate-900 border-2 border-slate-900 rounded-3xl p-8 flex flex-col relative overflow-hidden"
+              className="relative rounded-3xl p-8 flex flex-col overflow-hidden transition-all duration-300"
+              style={{ background: "linear-gradient(135deg, #064e3b 0%, #065f46 40%, #047857 100%)" }}
             >
-              {/* Glow */}
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -top-20 -right-20 w-72 h-72 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none animate-blob" />
+              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="absolute top-7 right-7 px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold">
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute top-7 right-7 px-3 py-1 rounded-full bg-emerald-400 text-emerald-950 text-xs font-bold shadow-lg"
+              >
                 Most Popular
-              </div>
+              </motion.div>
 
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-white mb-1">
-                  {PRICING_PRO.name}
-                </h3>
-                <p className="text-slate-400 text-sm">{PRICING_PRO.desc}</p>
+              <div className="relative mb-6">
+                <h3 className="text-xl font-bold text-white mb-1">{PRICING_PRO.name}</h3>
+                <p className="text-emerald-200/70 text-sm">{PRICING_PRO.desc}</p>
               </div>
-              <div className="flex items-end gap-1 mb-8">
-                <span className="text-5xl font-extrabold text-white">
-                  {currencySymbol}{getPrice(PRICING_PRO)}
-                </span>
-                <span className="text-slate-400 text-sm mb-1.5">/mo</span>
+              <div className="relative flex items-end gap-1 mb-8">
+                <span className="text-5xl font-extrabold text-white">{currencySymbol}{getPrice(PRICING_PRO)}</span>
+                <span className="text-emerald-300/70 text-sm mb-1.5">/mo</span>
               </div>
-              <Link href="/register?plan=pro" className="mb-8">
-                <button className="w-full py-3.5 rounded-full bg-emerald-500 text-white font-bold text-sm hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20">
+              <Link href="/register?plan=pro" className="relative mb-8">
+                <motion.button
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="w-full py-3.5 rounded-full bg-white text-emerald-900 font-bold text-sm hover:bg-emerald-50 transition-colors shadow-xl"
+                >
                   Get Pro Access
-                </button>
+                </motion.button>
               </Link>
-              <ul className="space-y-3 mt-auto">
+              <ul className="relative space-y-3 mt-auto">
                 {PRICING_PRO.features.map((feat) => (
-                  <li key={feat} className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  <li key={feat} className="flex items-center gap-3 text-sm text-emerald-100">
+                    <CheckCircle className="w-4 h-4 text-emerald-300 flex-shrink-0" />
                     {feat}
                   </li>
                 ))}
@@ -692,64 +729,82 @@ export default function LandingPage() {
             </motion.div>
           </div>
 
-          {/* Footnote */}
-          <p className="text-center text-slate-400 text-sm mt-8">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center text-slate-500 text-sm mt-8"
+          >
             All plans include a 7-day free trial. No credit card required.
-          </p>
+          </motion.p>
         </div>
       </section>
 
       {/* ── REVIEWS ────────────────────────────────────────────────────────── */}
-      <section id="reviews" className="py-24 bg-slate-50">
+      <section id="reviews" className="py-28 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="inline-block px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold uppercase tracking-wider mb-4">
-              Reviews
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-dark text-xs font-bold text-amber-400 uppercase tracking-widest mb-6"
+            >
+              <Star className="w-3 h-3 fill-amber-400" /> Reviews
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-5xl font-extrabold text-white mb-5"
+            >
               Loved by creators worldwide
-            </h2>
-            {/* Aggregate rating */}
-            <div className="flex items-center justify-center gap-2">
+            </motion.h2>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="flex items-center justify-center gap-2"
+            >
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <span className="text-lg font-extrabold text-slate-900">4.9</span>
-              <span className="text-slate-400 text-sm">/ 5 from 1,670+ creators</span>
-            </div>
+              <span className="text-lg font-extrabold text-white">4.9</span>
+              <span className="text-slate-400 text-sm">from 1,670+ creators</span>
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {REVIEWS.map((r, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.07 }}
-                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex flex-col"
+                transition={{ delay: i * 0.08, ease: "easeOut" }}
+                whileHover={{ y: -6 }}
+                className="glass-dark rounded-2xl p-6 flex flex-col transition-all duration-300 group cursor-default"
               >
                 <div className="flex gap-0.5 mb-4">
                   {[...Array(r.rating)].map((_, j) => (
                     <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-slate-600 text-sm leading-relaxed flex-1 mb-6">
-                  "{r.text}"
+                <p className="text-slate-300 text-sm leading-relaxed flex-1 mb-6">
+                  &ldquo;{r.text}&rdquo;
                 </p>
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-10 h-10 rounded-full ${r.color} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}
-                  >
+                <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                  <div className={`w-10 h-10 rounded-full ${r.color} flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-lg`}>
                     {r.initials}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-900">{r.name}</p>
-                    <p className="text-xs text-slate-400">
-                      {r.role} · {r.company}
-                    </p>
+                    <p className="text-sm font-bold text-white">{r.name}</p>
+                    <p className="text-xs text-slate-500">{r.role} · {r.company}</p>
                   </div>
                 </div>
               </motion.div>
@@ -759,63 +814,61 @@ export default function LandingPage() {
       </section>
 
       {/* ── BLOG ───────────────────────────────────────────────────────────── */}
-      <section id="blog" className="py-24 bg-white border-t border-slate-100">
+      <section id="blog" className="py-28 relative">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider mb-4">
-              Blog
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-dark text-xs font-bold text-slate-400 uppercase tracking-widest mb-6"
+            >
+              <BookOpen className="w-3 h-3" /> Blog
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-5xl font-extrabold text-white mb-4"
+            >
               Insights to grow your presence
-            </h2>
-            <p className="text-lg text-slate-500">
-              Actionable tips, strategies, and deep-dives for serious content creators.
-            </p>
+            </motion.h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {BLOGS.map((b, i) => (
               <motion.article
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all"
+                whileHover={{ y: -6 }}
+                className="group glass-dark rounded-2xl overflow-hidden transition-all duration-300"
               >
-                {/* Gradient cover */}
-                <div
-                  className={`h-48 bg-gradient-to-br ${b.gradient} flex items-center justify-center`}
-                >
-                  <BookOpen className="w-10 h-10 text-white/80" />
+                <div className={`h-44 bg-gradient-to-br ${b.gradient} flex items-center justify-center relative overflow-hidden`}>
+                  <div className="absolute inset-0 bg-black/20" />
+                  <BookOpen className="w-10 h-10 text-white/90 relative z-10" />
                 </div>
-
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-3">
-                    <span
-                      className={`px-2.5 py-1 rounded-full text-xs font-semibold ${b.catBg} ${b.catFg}`}
-                    >
+                    <span className="px-2.5 py-1 rounded-full text-xs font-semibold glass-dark text-slate-300">
                       {b.category}
                     </span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <span className="text-xs text-slate-500 flex items-center gap-1">
                       <Timer className="w-3 h-3" /> {b.readTime}
                     </span>
                   </div>
-
-                  <h3 className="text-base font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors leading-snug">
+                  <h3 className="text-base font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors leading-snug">
                     {b.title}
                   </h3>
-                  <p className="text-sm text-slate-500 leading-relaxed mb-5">
-                    {b.excerpt}
-                  </p>
-
+                  <p className="text-sm text-slate-400 leading-relaxed mb-5">{b.excerpt}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-slate-400">{b.date}</span>
-                    <a
-                      href={b.slug}
-                      className="text-sm font-semibold text-emerald-600 flex items-center gap-1 group-hover:gap-2 transition-all"
-                    >
-                      Read article <ArrowRight className="w-3.5 h-3.5" />
+                    <span className="text-xs text-slate-600">{b.date}</span>
+                    <a href={b.slug} className="text-sm font-semibold text-emerald-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+                      Read <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
                 </div>
@@ -826,42 +879,52 @@ export default function LandingPage() {
       </section>
 
       {/* ── FAQ ────────────────────────────────────────────────────────────── */}
-      <section className="py-24 bg-slate-50">
+      <section className="py-28 relative">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-extrabold text-slate-900 mb-3">
+          <div className="text-center mb-14">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl font-extrabold text-white mb-3"
+            >
               Frequently asked questions
-            </h2>
-            <p className="text-slate-500">
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-slate-400"
+            >
               Still have questions?{" "}
-              <a href="#" className="text-emerald-600 font-semibold hover:underline">
+              <a href="mailto:hello@postunivers.com" className="text-emerald-400 font-semibold hover:underline">
                 Contact us
               </a>
-            </p>
+            </motion.p>
           </div>
 
           <div className="space-y-3">
             {FAQS.map((faq, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
+                className="glass-dark rounded-2xl overflow-hidden"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-left"
+                  className="w-full flex items-center justify-between px-6 py-5 text-left group"
                 >
-                  <span className="text-sm font-semibold text-slate-900 pr-4">
+                  <span className="text-sm font-semibold text-white pr-4 group-hover:text-emerald-400 transition-colors">
                     {faq.q}
                   </span>
-                  <ChevronDown
-                    className={`w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-200 ${
-                      openFaq === i ? "rotate-180" : ""
-                    }`}
-                  />
+                  <motion.div animate={{ rotate: openFaq === i ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                    <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  </motion.div>
                 </button>
                 <AnimatePresence>
                   {openFaq === i && (
@@ -869,10 +932,10 @@ export default function LandingPage() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: 0.25 }}
                       className="overflow-hidden"
                     >
-                      <p className="px-6 pb-5 text-sm text-slate-500 leading-relaxed border-t border-slate-50 pt-1">
+                      <p className="px-6 pb-5 text-sm text-slate-400 leading-relaxed border-t border-white/5 pt-3">
                         {faq.a}
                       </p>
                     </motion.div>
