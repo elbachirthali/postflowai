@@ -45,21 +45,21 @@ const FEATURES = [
     bg: "bg-emerald-50",
     fg: "text-emerald-600",
     title: "AI Caption Studio",
-    desc: "Our AI analyzes your content and writes platform-perfect captions — hooks, hashtags, CTAs — optimized for each network's algorithm.",
+    desc: "Our AI caption generator analyzes your content and writes platform-perfect captions — hooks, hashtags, CTAs — optimized for each network's algorithm.",
   },
   {
     icon: Globe,
     bg: "bg-blue-50",
     fg: "text-blue-600",
     title: "One-Click Cross-Posting",
-    desc: "Upload once. Publish everywhere. Reach all your audiences across 8+ platforms in under 30 seconds instead of 30 minutes.",
+    desc: "Upload once. Schedule and publish everywhere. Cross-post to TikTok, Instagram, YouTube & 5 more platforms in under 30 seconds instead of 30 minutes.",
   },
   {
     icon: Calendar,
     bg: "bg-violet-50",
     fg: "text-violet-600",
     title: "Visual Content Calendar",
-    desc: "Plan, schedule, and visualize weeks of content at a glance. Never miss a trending moment or optimal posting window again.",
+    desc: "Plan, schedule, and visualize weeks of content at a glance with your social media content calendar. Never miss a trending moment or optimal posting window again.",
   },
   {
     icon: BarChart2,
@@ -386,10 +386,10 @@ export default function LandingPage() {
             transition={{ delay: 0.1 }}
             className="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.06] mb-6"
           >
-            Stop wasting hours
+            AI Social Media Scheduler
             <br />
             <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-              on social media.
+              Built for Creators.
             </span>
           </motion.h1>
 
@@ -400,9 +400,9 @@ export default function LandingPage() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            Write once. PostUnivers AI generates perfect captions for every platform
-            and publishes everywhere — TikTok, Instagram, LinkedIn, YouTube and more —
-            in under 60 seconds.
+            Stop wasting hours on social media. PostUnivers AI generates platform-perfect
+            captions and schedules your posts to TikTok, Instagram, YouTube, LinkedIn & more —
+            all in under 60 seconds.
           </motion.p>
 
           {/* CTAs */}
@@ -495,7 +495,7 @@ export default function LandingPage() {
             >
               Everything you need to
               <br />
-              <span className="text-gradient-green">dominate social media</span>
+              <span className="text-gradient-green">schedule &amp; manage social media</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -504,8 +504,8 @@ export default function LandingPage() {
               transition={{ delay: 0.15 }}
               className="text-lg text-slate-400 max-w-2xl mx-auto"
             >
-              Stop juggling five tools. PostUnivers combines AI content creation and
-              cross-platform publishing in one beautiful dashboard.
+              Stop juggling five tools. PostUnivers combines AI caption generation,
+              social media scheduling, and cross-platform publishing in one dashboard.
             </motion.p>
           </div>
 
@@ -1005,7 +1005,7 @@ export default function LandingPage() {
                 </span>
               </Link>
               <p className="text-sm text-slate-500 leading-relaxed max-w-xs">
-                AI-powered social media management. Create once, publish everywhere.
+                AI social media scheduler for content creators. Schedule posts to TikTok, Instagram, YouTube & more from one dashboard.
               </p>
             </div>
 
